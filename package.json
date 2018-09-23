@@ -1,0 +1,20 @@
+{
+  "name": "offLineNews",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "preinstall": "chmod a+x scripts/postinstall.sh",
+    "postinstall": "scripts/postinstall.sh",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.2.17"
+  }
+}
