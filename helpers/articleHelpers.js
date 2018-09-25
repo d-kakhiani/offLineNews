@@ -37,6 +37,9 @@ const dataSource = {
     lastCheckout: 513345,
   }),
 };
+const sharp = require('sharp');
+const request = require('request');
+
 let createInitSource = () => {
   mongoose.connection.collections.articlesources.drop(() => {
     let ambebi = dataSource.ambebi;
@@ -57,6 +60,10 @@ let createInitSource = () => {
 
 let getDataSource = () => {
   return articleSource.find({});
+};
+
+let getArticles = () => {
+  return Article.find({});
 };
 
 let updateArticles = () => {
@@ -86,6 +93,7 @@ let updateArticles = () => {
                 } else
                   obj[param.key] = data[param.value];
               }
+              obj.publish_up = new Date();
               if (!obj.title) return null;
               return new Article(obj);
             }).catch(error => {
@@ -152,8 +160,17 @@ let retryFetch = (url, count, delay = 700) => {
   }));
 };
 
+let processImages = (url, width = 120, height = 120, format = 'jpg') => {
+  let transform = sharp();
+  transform = transform.toFormat(format);
+  transform = transform.resize(width, height);
+  return request(url).pipe(transform);
+};
+
 const Helper = {
   createInitSource: createInitSource,
   getDataSource: updateArticles,
+  getArticles: getArticles,
+  processImage: processImages,
 };
 module.exports = Helper;
