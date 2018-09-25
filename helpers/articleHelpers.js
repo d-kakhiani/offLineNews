@@ -102,7 +102,14 @@ let updateArticles = () => {
       if (err) {
         return console.error(err);
       } else {
-        articleSource.collection.updateMany({}, {$inc: {lastCheckout: 5}});
+        getDataSource().then(results => {
+          for (let item of results) {
+            let sum = item.lastCheckout + item.eachStep;
+            // TODO DeprecationWarning
+            articleSource.findByIdAndUpdate(item._id,
+                {lastCheckout: sum}).then((source) => source);
+          }
+        });
       }
     });
   });
@@ -144,6 +151,7 @@ let retryFetch = (url, count, delay = 700) => {
     localFetch(count);
   }));
 };
+
 const Helper = {
   createInitSource: createInitSource,
   getDataSource: updateArticles,
