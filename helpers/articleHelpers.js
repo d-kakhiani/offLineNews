@@ -69,7 +69,7 @@ let updateArticles = () => {
         let url = source.link.replace('{id}', i.toString());
 
         promiseArr.push(
-            parseUrl(url).then(data => {
+            parseUrl(url, source.timeout).then(data => {
               let obj = {
                 'source': source.name,
               };
@@ -86,6 +86,7 @@ let updateArticles = () => {
                 } else
                   obj[param.key] = data[param.value];
               }
+              if (!obj.title) return null;
               return new Article(obj);
             }).catch(error => {
               return null;
@@ -101,16 +102,48 @@ let updateArticles = () => {
       if (err) {
         return console.error(err);
       } else {
-        articleSource.updateMany({}, {$inc: {lastCheckout: 5}});
+        articleSource.collection.updateMany({}, {$inc: {lastCheckout: 5}});
       }
     });
   });
 };
 
-let parseUrl = (url,timeout) => {
-  return fetch(url).then(data => data.json());
+let parseUrl = (url, timeout) => {
+  return retryFetch(url, timeout);
 };
+let retryFetch = (url, count, delay = 700) => {
+  if (!count) count = 0;
+  return new Promise(((resolve, reject) => {
+    let localFetch = (n) => {
+      fetch(url).then((response) => {
+        let data = response.json();
+        if (data && data.title) {
 
+          resolve(data);
+        } else {
+          if (n > 0) {
+            retry(n);
+          } else {
+            resolve(data);
+          }
+        }
+      }).catch((error) => {
+        if (n > 0) {
+          retry(n);
+        } else {
+          reject(error);
+        }
+      });
+    };
+    let retry = (n) => {
+      // console.log('retry', url);
+      setTimeout(() => {
+        localFetch(--n);
+      }, delay);
+    };
+    localFetch(count);
+  }));
+};
 const Helper = {
   createInitSource: createInitSource,
   getDataSource: updateArticles,
