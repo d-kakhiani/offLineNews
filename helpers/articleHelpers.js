@@ -1,6 +1,5 @@
 const articleSource = require('../models/articleSource');
 const Article = require('../models/article');
-const mongoose = require('mongoose');
 const fetch = require('node-fetch');
 const dataSource = {
   ambebi: new articleSource({
@@ -41,7 +40,7 @@ const sharp = require('sharp');
 const request = require('request');
 
 let createInitSource = () => {
-  mongoose.connection.collections.articlesources.drop(() => {
+  articleSource.collection().drop(() => {
     let ambebi = dataSource.ambebi;
     let ipn = dataSource.ipn;
     ambebi.save().then((ambebiObject) => {
