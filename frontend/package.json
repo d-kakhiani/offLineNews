@@ -22,6 +22,7 @@
     "@polymer/iron-selector": "^3.0.0-pre.15",
     "@polymer/iron-swipeable-container": "^3.0.1",
     "@polymer/paper-icon-button": "^3.0.0-pre.15",
+    "@polymer/paper-ripple": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
     "@webcomponents/webcomponentsjs": "^2.0.0"
   },

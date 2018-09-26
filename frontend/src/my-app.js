@@ -8,8 +8,11 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {
+  setPassiveTouchGestures,
+  setRootPath,
+} from '@polymer/polymer/lib/utils/settings.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -84,7 +87,7 @@ class MyApp extends PolymerElement {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="view1" href="[[rootPath]]view1">View One</a>
+            <a name="home" href="[[rootPath]]home">View One</a>
             <a name="view2" href="[[rootPath]]view2">View Two</a>
             <a name="view3" href="[[rootPath]]view3">View Three</a>
           </iron-selector>
@@ -100,8 +103,8 @@ class MyApp extends PolymerElement {
             </app-toolbar>
           </app-header>
 
-          <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <my-view1 name="view1"></my-view1>
+          <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback="home">
+            <home-view name="home"></home-view>
             <my-view2 name="view2"></my-view2>
             <my-view3 name="view3"></my-view3>
             <my-view404 name="view404"></my-view404>
@@ -116,46 +119,36 @@ class MyApp extends PolymerElement {
       page: {
         type: String,
         reflectToAttribute: true,
-        observer: '_pageChanged'
+        observer: '_pageChanged',
       },
       routeData: Object,
-      subroute: Object
+      subroute: Object,
     };
   }
 
   static get observers() {
     return [
-      '_routePageChanged(routeData.page)'
+      '_routePageChanged(routeData.page)',
     ];
   }
 
   _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      this.page = 'view1';
-    } else if (['view1', 'view2', 'view3'].indexOf(page) !== -1) {
+      this.page = 'home';
+    } else if (['home', 'view2', 'view3'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
     }
-
-    // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
   }
 
   _pageChanged(page) {
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
     switch (page) {
-      case 'view1':
-        import('./my-view1.js');
+      case 'home':
+        import('./home-view.js');
         break;
       case 'view2':
         import('./my-view2.js');
@@ -168,6 +161,7 @@ class MyApp extends PolymerElement {
         break;
     }
   }
+
 }
 
 window.customElements.define('my-app', MyApp);
