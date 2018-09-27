@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "preinstall": "chmod a+x scripts/postinstall.sh",
+    "postinstall": "scripts/postinstall.sh",
     "test": "mocha"
   },
   "keywords": [],

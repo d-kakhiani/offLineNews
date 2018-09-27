@@ -19,10 +19,6 @@ class HomeView extends CoreElement {
     overflow-x: hidden;
 
     }
-    .loadMore{
-        height: 20px;
-        margin-bottom: 20px;
-    }    
 </style>
     
     <iron-swipeable-container class="container" id="swiper">
@@ -57,7 +53,7 @@ class HomeView extends CoreElement {
     super.ready();
     let options = {
       root: null,
-      rootMargin: '150px',
+      rootMargin: '250px',
     };
     this._newsDataObserver = new IntersectionObserver(
         this._observerHandler.bind(this),
@@ -78,7 +74,7 @@ class HomeView extends CoreElement {
   }
 
   _observerHandler(entries, observer) {
-    if (entries && entries[0] && entries[0].intersectionRatio === 0) {
+    if (entries && entries[0].intersectionRatio <= 0) {
       return;
     }
 
