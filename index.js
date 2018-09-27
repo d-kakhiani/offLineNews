@@ -12,6 +12,17 @@ app.use(helmet());
 
 app.use('/api', require('./routes/api'));
 
+app.use('/files/images', (req, res, next) => {
+
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  let url = req.query.url;
+  if (url[0] === '/') {
+    url = 'http:' + url;
+  }
+  res.contentType('image/jpeg');
+  Helper.processImage(url).pipe(res);
+
+});
 app.use((err, req, resp, next) => {
   resp.send({error: err.message});
 });

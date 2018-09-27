@@ -23,7 +23,11 @@ class HomeView extends CoreElement {
     
     <iron-swipeable-container class="container" id="swiper">
     <template is="dom-repeat" items="{{_newsList}}">
-          <news-item title="[[item.title]]" img="[[item.thumb]]" publish="[[item.publish_up]]"></news-item>
+          <news-item 
+                title="[[item.title]]" 
+                img="/files/images/?url=[[item.thumb]]" 
+                publish="[[item.publish_up]]">
+          </news-item>
     </template>
 </iron-swipeable-container>
       <div id="loadMore" class="loadMore"></div>

@@ -10,14 +10,5 @@ router.get('/', (req, res, next) => {
       });
 });
 
-router.get('/image/test.jpg', (req, res, next) => {
-  res.type('image/jpeg');
-  // res.setHeader('Cache-Control', 'public, max-age=86400');
-
-  Helper.processImage(
-      'http://cdn2.ipn.ge/media/articles/2018/09-23/axalcixe_kachagoba.jpg').
-      pipe(res);
-
-});
 
 module.exports = router;
