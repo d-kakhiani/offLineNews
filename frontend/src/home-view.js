@@ -19,6 +19,10 @@ class HomeView extends CoreElement {
     overflow-x: hidden;
 
     }
+    :host([grid-view]) .container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 </style>
     
     <iron-swipeable-container class="container" id="swiper">
@@ -26,7 +30,8 @@ class HomeView extends CoreElement {
           <news-item 
                 title="[[item.title]]" 
                 img="/files/images/?url=[[item.thumb]]" 
-                publish="[[item.publish_up]]">
+                publish="[[item.publish_up]]"
+                grid-view$="[[gridView]]">
           </news-item>
     </template>
 </iron-swipeable-container>
@@ -50,6 +55,10 @@ class HomeView extends CoreElement {
         notify: true,
         value: [],
       },
+      gridView: {
+        type: Boolean,
+        reflectToAttribute: true,
+      },
     };
   }
 
@@ -57,7 +66,7 @@ class HomeView extends CoreElement {
     super.ready();
     let options = {
       root: null,
-      rootMargin: '250px',
+      rootMargin: '60%',
     };
     this._newsDataObserver = new IntersectionObserver(
         this._observerHandler.bind(this),
@@ -68,6 +77,7 @@ class HomeView extends CoreElement {
   _loadData(append = true) {
     if (this._noMoreData) return;
     this._getData(this.skip, this.take).then((items) => {
+      if (!items) return;
       this._noMoreData = (items.length === 0);
       if (append) {
         this.push('_newsList', ...items);

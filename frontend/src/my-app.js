@@ -25,7 +25,7 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
-
+import '@polymer/iron-icon';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -73,6 +73,10 @@ class MyApp extends PolymerElement {
         .drawer-list a.iron-selected {
           color: black;
           font-weight: bold;
+          outline: none;
+        }
+        .view-changer{
+            margin-left: 8px;
         }
       </style>
 
@@ -87,24 +91,28 @@ class MyApp extends PolymerElement {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="home" href="[[rootPath]]home">View One</a>
-            <a name="view2" href="[[rootPath]]view2">View Two</a>
-            <a name="view3" href="[[rootPath]]view3">View Three</a>
+            <a name="home" href="[[rootPath]]home">Home</a>
+            <a name="view2" href="[[rootPath]]view2">Notifications</a>
+            <a name="view3" href="[[rootPath]]view3">Saved</a>
+            <a name="view4" href="[[rootPath]]view4">Setting</a>
           </iron-selector>
         </app-drawer>
 
         <!-- Main content -->
-        <app-header-layout >
+        <app-header-layout>
 
-          <app-header slot="header" condenses="" reveals="" effects="waterfall">
+          <app-header slot="header" shadow fixed condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="">My App</div>
+              <div main-title="">Home</div>
+                        <iron-icon icon="my-icons:search"></iron-icon>
+                        <iron-icon class="view-changer" icon="[[_gridIcon]]" on-click="_changeView"></iron-icon>
+
             </app-toolbar>
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback="home">
-            <home-view name="home"></home-view>
+            <home-view name="home" grid-view="[[gridView]]"></home-view>
             <my-view2 name="view2"></my-view2>
             <my-view3 name="view3"></my-view3>
             <my-view404 name="view404"></my-view404>
@@ -123,6 +131,14 @@ class MyApp extends PolymerElement {
       },
       routeData: Object,
       subroute: Object,
+      gridView: {
+        type: Boolean,
+        value: false,
+      },
+      _gridIcon: {
+        type: String,
+        computed: '_gridIconComputed(gridView)',
+      },
     };
   }
 
@@ -143,6 +159,13 @@ class MyApp extends PolymerElement {
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
+
+  }
+
+  _gridIconComputed(grid) {
+    if (grid)
+      return 'my-icons:close';
+    return 'my-icons:menu';
   }
 
   _pageChanged(page) {
@@ -160,6 +183,10 @@ class MyApp extends PolymerElement {
         import('./my-view404.js');
         break;
     }
+  }
+
+  _changeView() {
+    this.gridView = !this.gridView;
   }
 
 }

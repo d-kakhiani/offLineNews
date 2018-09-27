@@ -33,7 +33,8 @@ class NewsItem extends LegacyElementMixin(CoreElement) {
     .title {
         font-size: 14px;
         padding: 12px;
-        font-family: "BPG Nino Mtavruli";
+        font-family: "medium_caps";
+        font-weight: 600;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -66,6 +67,20 @@ class NewsItem extends LegacyElementMixin(CoreElement) {
     .bottom .time {
         font-size: 12px;
     }
+    :host([grid-view]) .details-container{
+        flex-grow: 1;
+        z-index: 1;
+        color: white;
+    }
+    :host([grid-view]) .img{
+        position: absolute;
+        max-width: unset;
+        width: 100%;
+    }
+    :host([grid-view]) paper-ripple{
+    background: #2e4e84a3;
+    }
+    
 </style>
 <div class="details-container">
     <span class="title">[[title]]</span>
