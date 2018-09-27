@@ -163,7 +163,7 @@ let processImages = (url, width = 120, height = 120, format = 'jpg') => {
   let transform = sharp();
   transform = transform.toFormat(format);
   transform = transform.resize(width, height);
-  return request(url).pipe(transform);
+  return request(encodeURI(url)).pipe(transform);
 };
 
 const Helper = {
