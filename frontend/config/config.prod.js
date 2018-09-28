@@ -1,4 +1,5 @@
 export const config = {
-    api: '/api/',
-    notifications: ''
+  api: '/api/',
+  notifications: '',
+  filesEndPoint: '',
 };

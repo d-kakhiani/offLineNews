@@ -3,6 +3,7 @@ import {CoreElement} from './core/CoreElement';
 import {html} from '@polymer/polymer/polymer-element.js';
 import './elements/news-item';
 import '@polymer/iron-swipeable-container';
+import {config} from '../config/config';
 
 class HomeView extends CoreElement {
   static get template() {
@@ -29,7 +30,7 @@ class HomeView extends CoreElement {
     <template is="dom-repeat" items="{{_newsList}}">
           <news-item 
                 title="[[item.title]]" 
-                img="/files/images/?url=[[item.thumb]]" 
+                img="[[filesEndPoint]]/files/images/?url=[[item.thumb]]" 
                 publish="[[item.publish_up]]"
                 grid-view$="[[gridView]]">
           </news-item>
@@ -63,6 +64,10 @@ class HomeView extends CoreElement {
         type: String,
         computed: '_swipeStyleComputed(gridView)',
       },
+      filesEndPoint:{
+        type:String,
+        value:config.filesEndPoint
+      }
     };
   }
 
