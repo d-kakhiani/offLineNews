@@ -25,7 +25,7 @@ class HomeView extends CoreElement {
     }
 </style>
     
-    <iron-swipeable-container class="container" id="swiper">
+    <iron-swipeable-container class="container" id="swiper" swipe-style="[[swipeStyle]]">
     <template is="dom-repeat" items="{{_newsList}}">
           <news-item 
                 title="[[item.title]]" 
@@ -59,7 +59,16 @@ class HomeView extends CoreElement {
         type: Boolean,
         reflectToAttribute: true,
       },
+      swipeStyle: {
+        type: String,
+        computed: '_swipeStyleComputed(gridView)',
+      },
     };
+  }
+
+  _swipeStyleComputed(view) {
+    if (view) return 'curve';
+    return 'horizontal';
   }
 
   ready() {
