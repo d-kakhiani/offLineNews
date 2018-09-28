@@ -5,13 +5,14 @@ const Helper = require('./helpers/articleHelpers');
 const createInitSource = Helper.createInitSource;
 const getDataSource = Helper.getDataSource;
 const app = express();
-// const prpl=require('prpl-server');
-// const polymerJSON = require("./polymer.json");
+// const prpl = require('prpl-server');
+// const polymerJSON = require('./polymer.json');
+const compress = require('compression');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/newApp', {useNewUrlParser: true});
 app.use(helmet());
-
+app.use(compress());
 app.use('/api', require('./routes/api'));
 
 app.use('/files/images', (req, res, next) => {
