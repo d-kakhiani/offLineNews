@@ -93,7 +93,7 @@ class MyApp extends PolymerElement {
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="home" href="[[rootPath]]home">Home</a>
             <a name="view2" href="[[rootPath]]view2">Notifications</a>
-            <a name="view3" href="[[rootPath]]view3">Saved</a>
+            <a name="articles" href="[[rootPath]]articles">Saved</a>
             <a name="view4" href="[[rootPath]]view4">Setting</a>
           </iron-selector>
         </app-drawer>
@@ -114,7 +114,7 @@ class MyApp extends PolymerElement {
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback="home">
             <home-view name="home" grid-view="[[gridView]]"></home-view>
             <my-view2 name="view2"></my-view2>
-            <my-view3 name="view3"></my-view3>
+            <article-page name="articles" route="{{route}}"  base-path="/articles/"></article-page>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
@@ -151,7 +151,7 @@ class MyApp extends PolymerElement {
   _routePageChanged(page) {
     if (!page) {
       this.page = 'home';
-    } else if (['home', 'view2', 'view3'].indexOf(page) !== -1) {
+    } else if (['home', 'view2', 'articles'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -176,8 +176,8 @@ class MyApp extends PolymerElement {
       case 'view2':
         import('./my-view2.js');
         break;
-      case 'view3':
-        import('./my-view3.js');
+      case 'articles':
+        import('./article-page.js');
         break;
       case 'view404':
         import('./my-view404.js');

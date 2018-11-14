@@ -2,9 +2,10 @@ import {CoreElement} from '../core/CoreElement';
 import {html} from '@polymer/polymer/polymer-element.js';
 import {config} from '../../config/config';
 import '@polymer/paper-ripple';
-import {LegacyElementMixin} from '@polymer/polymer/lib/legacy/legacy-element-mixin';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
 
-class NewsItem extends LegacyElementMixin(CoreElement) {
+class NewsItem extends GestureEventListeners(CoreElement) {
   static get template() {
     return html`<style>
     :host {
@@ -80,12 +81,18 @@ class NewsItem extends LegacyElementMixin(CoreElement) {
     :host([grid-view]) paper-ripple{
     background: #2e4e84a3;
     }
-    
+    .icon{
+    width: 70px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    }
 </style>
 <div class="details-container">
     <span class="title">[[title]]</span>
     <div class="bottom">
-        <span class="icon">icon</span>
+        <span class="icon" style="background-image: url('[[_icon]]')"></span>
         <span class="time">[[_getFormatedDate(publish)]]</span>
     </div>
 </div>
@@ -103,6 +110,61 @@ class NewsItem extends LegacyElementMixin(CoreElement) {
   _getFormatedDate(value) {
     return new Date(value).toDateString();
   }
+
+  constructor() {
+    super();
+    Gestures.addListener(this, 'track', this.trackHandler.bind(this));
+    this.addEventListener('click', this.showContent.bind(this));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    Gestures.removeListener(this, 'track', this.trackHandler.bind(this));
+  }
+
+  trackHandler(e) {
+    switch (e.detail.state) {
+      case 'start':
+        this.message = 'Tracking started!';
+        break;
+      case 'track':
+        this.message = 'Tracking in progress... ' +
+            e.detail.dx + ', ' + e.detail.x + ', ' + e.detail.y;
+        break;
+      case 'end':
+        if (Math.abs(e.detail.dy) > 60) return;
+        if (Math.abs(e.detail.dx) > 100) {
+          this.dispatchEvent(
+              new CustomEvent('delete', {detail: {id: this.itemId}}));
+        }
+        this.message = 'Tracking ended!';
+        break;
+    }
+  }
+
+  static get properties() {
+    return {
+      itemId: {
+        type: String,
+      },
+      _icon: {
+        type: String,
+        computed: '_iconComputed(source)',
+      },
+    };
+  }
+
+  _iconComputed(source) {
+    if (source.includes('ambebi')) {
+      return 'https://www.ambebi.ge/static/img/ambebimainlogo.svg';
+    }
+    return 'https://www.interpressnews.ge/static/img/logo.svg';
+  }
+
+  showContent() {
+    this.redirectTo('/articles/' + this.itemId);
+  }
+
 }
 
 customElements.define('news-item', NewsItem);

@@ -2,7 +2,6 @@ import './shared-styles.js';
 import {CoreElement} from './core/CoreElement';
 import {html} from '@polymer/polymer/polymer-element.js';
 import './elements/news-item';
-import '@polymer/iron-swipeable-container';
 import {config} from '../config/config';
 
 class HomeView extends CoreElement {
@@ -12,31 +11,35 @@ class HomeView extends CoreElement {
         display: flex;
         flex-direction: column;
     }
-    .container{
+
+    .container {
         display: flex;
         flex-direction: column;
         justify-content: stretch;
-       flex-grow: 1;
-    overflow-x: hidden;
+        flex-grow: 1;
+        overflow-x: hidden;
 
     }
-    :host([grid-view]) .container{
+
+    :host([grid-view]) .container {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
 </style>
-    
-    <iron-swipeable-container class="container" id="swiper" swipe-style="[[swipeStyle]]">
+<div class="container">
     <template is="dom-repeat" items="{{_newsList}}">
-          <news-item 
-                title="[[item.title]]" 
-                img="[[filesEndPoint]]/files/images/?url=[[item.thumb]]" 
+        <news-item
+                item-id="[[item._id]]"
+                title="[[item.title]]"
+                img="[[filesEndPoint]]/files/images/?url=[[item.thumb]]"
                 publish="[[item.publish_up]]"
+                source="[[item.source]]"
+                on-delete="_deleteThisItem"
                 grid-view$="[[gridView]]">
-          </news-item>
+        </news-item>
     </template>
-</iron-swipeable-container>
-      <div id="loadMore" class="loadMore"></div>
+</div>
+<div id="loadMore" class="loadMore"></div>
     
     `;
   }
@@ -60,20 +63,11 @@ class HomeView extends CoreElement {
         type: Boolean,
         reflectToAttribute: true,
       },
-      swipeStyle: {
+      filesEndPoint: {
         type: String,
-        computed: '_swipeStyleComputed(gridView)',
+        value: config.filesEndPoint,
       },
-      filesEndPoint:{
-        type:String,
-        value:config.filesEndPoint
-      }
     };
-  }
-
-  _swipeStyleComputed(view) {
-    if (view) return 'curve';
-    return 'horizontal';
   }
 
   ready() {
@@ -115,19 +109,9 @@ class HomeView extends CoreElement {
     return this.callApi(`?skip=${skip}&take=${take}`);
   }
 
-  _fixSwiper() {
-    this.$.swiper._addListeners = (node) => {
-      if (node.nodeType === Node.TEXT_NODE || node.nodeType ===
-          Node.COMMENT_NODE)
-        return;
-      // Set up the animation.
-      node.style.transitionProperty = this.$.swiper._transitionProperty;
-      node.style.transition = this.$.swiper.transition;
-
-      this.$.swiper.listen(node, 'track', '_onTrack');
-      this.$.swiper.setScrollDirection('y', node);
-      this.$.swiper.listen(node, 'transitionend', '_onTransitionEnd');
-    };
+  _deleteThisItem(e) {
+    let index = e.model.index;
+    this.splice('_newsList', index, 1);
   }
 
 }

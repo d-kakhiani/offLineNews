@@ -43,5 +43,7 @@ export class CoreElement extends PolymerElement {
 
   redirectTo(url) {
     window.history.pushState({}, null, url);
+    window.dispatchEvent(new CustomEvent('location-changed'));
   }
+
 }
