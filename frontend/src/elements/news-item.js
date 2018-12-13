@@ -173,7 +173,7 @@ class NewsItem extends CoreElement {
   }
 
   handleScroll(event) {
-    if (event.currentTarget.scrollLeft === 0 ||
+    if (event.currentTarget.scrollLeft <=12 ||
         event.currentTarget.scrollLeft >= 2 * this.deviceWidth - 12) {
       event.currentTarget.removeEventListener('scroll',
           this.handleScroll.bind(this));
