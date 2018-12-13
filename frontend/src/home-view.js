@@ -85,6 +85,70 @@ class HomeView extends CoreElement {
   _loadData(append = true) {
     if (this._noMoreData) return;
     this._getData(this.skip, this.take).then((items) => {
+      items= [
+        {
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        }, {
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        }, {
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        }, {
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },
+        {
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },{
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },{
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },{
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },{
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },{
+          title: 'Hello',
+          _id: 'dkusa',
+          thumb: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          publish_up: '2018-12-13T14:56:01.860Z',
+          source: 'ambebi',
+        },
+      ];
       if (!items) return;
       this._noMoreData = (items.length === 0);
       if (append) {
