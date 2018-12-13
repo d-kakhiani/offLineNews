@@ -10,7 +10,7 @@ const app = express();
 const compress = require('compression');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/newApp', {useNewUrlParser: true});
+mongoose.connect(`mongodb://dbuser:WeirdPlace1234.@ds129914.mlab.com:29914/newapp`, {useNewUrlParser: true});
 app.use(helmet());
 app.use(compress());
 app.use('/api', require('./routes/api'));
