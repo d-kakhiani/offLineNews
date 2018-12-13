@@ -2,23 +2,22 @@ import {CoreElement} from '../core/CoreElement';
 import {html} from '@polymer/polymer/polymer-element.js';
 import {config} from '../../config/config';
 import '@polymer/paper-ripple';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
-import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 
-class NewsItem extends GestureEventListeners(CoreElement) {
+class NewsItem extends CoreElement {
   static get template() {
     return html`<style>
     :host {
-        display: inline-flex;
-        flex-grow: 1;
-        background: #dcd8d86e;
-        margin: 12px;
-        border-radius: 12px;
-        box-sizing: border-box;
-        overflow: hidden;
-        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-        position: relative;
-        touch-action: pan-y !important;
+        /*touch-action: pan-y !important;*/
+         scroll-snap-type: mandatory;
+        scroll-snap-points-y: repeat(100vw);
+        scroll-snap-type: x mandatory;
+        display: flex;
+        overflow-x: scroll;
+        contain: paint;
+    }
+    :host > *{
+        scroll-snap-align: center;
     }
 
     .img {
@@ -68,38 +67,69 @@ class NewsItem extends GestureEventListeners(CoreElement) {
     .bottom .time {
         font-size: 12px;
     }
-    :host([grid-view]) .details-container{
+
+    :host([grid-view]) .details-container {
         flex-grow: 1;
         z-index: 1;
         color: white;
     }
-    :host([grid-view]) .img{
+
+    :host([grid-view]) .img {
         position: absolute;
         max-width: unset;
         width: 100%;
     }
-    :host([grid-view]) paper-ripple{
-    background: #2e4e84a3;
-    }
-    .icon{
-    width: 70px;
-    height: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    }
-</style>
-<div class="details-container">
-    <span class="title">[[title]]</span>
-    <div class="bottom">
-        <span class="icon" style="background-image: url('[[_icon]]')"></span>
-        <span class="time">[[_getFormatedDate(publish)]]</span>
-    </div>
-</div>
-<div class="img"
-     style="background-image: url([[img]])"></div>
-<paper-ripple></paper-ripple>
 
+    :host([grid-view]) paper-ripple {
+        background: #2e4e84a3;
+    }
+
+    .icon {
+        width: 70px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .container{
+        display: inline-flex;
+        flex-grow: 1;
+        background: #dcd8d86e;
+        margin: 12px;
+        border-radius: 12px;
+        box-sizing: border-box;
+        overflow: hidden;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        position: relative;
+        min-width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        contain: paint;
+      }
+    
+    .left, .right {
+        min-width: 100vw;
+        height: 120px;
+    }
+    ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
+    
+</style>
+<div class="left"></div>
+<div class="container">
+  <div class="details-container">
+      <span class="title">[[title]]</span>
+      <div class="bottom">
+          <span class="icon" style="background-image: url('[[_icon]]')"></span>
+          <span class="time">[[_getFormatedDate(publish)]]</span>
+      </div>
+  </div>
+  <div class="img"
+       style="background-image: url([[img]])"></div>
+  <paper-ripple></paper-ripple>
+</div>
+<div class="right"></div>
     `;
   }
 
@@ -109,37 +139,6 @@ class NewsItem extends GestureEventListeners(CoreElement) {
 
   _getFormatedDate(value) {
     return new Date(value).toDateString();
-  }
-
-  constructor() {
-    super();
-    Gestures.addListener(this, 'track', this.trackHandler.bind(this));
-    this.addEventListener('click', this.showContent.bind(this));
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    Gestures.removeListener(this, 'track', this.trackHandler.bind(this));
-  }
-
-  trackHandler(e) {
-    switch (e.detail.state) {
-      case 'start':
-        this.message = 'Tracking started!';
-        break;
-      case 'track':
-        this.message = 'Tracking in progress... ' +
-            e.detail.dx + ', ' + e.detail.x + ', ' + e.detail.y;
-        break;
-      case 'end':
-        if (Math.abs(e.detail.dy) > 60) return;
-        if (Math.abs(e.detail.dx) > 100) {
-          this.dispatchEvent(
-              new CustomEvent('delete', {detail: {id: this.itemId}}));
-        }
-        this.message = 'Tracking ended!';
-        break;
-    }
   }
 
   static get properties() {
@@ -152,6 +151,13 @@ class NewsItem extends GestureEventListeners(CoreElement) {
         computed: '_iconComputed(source)',
       },
     };
+  }
+
+  ready() {
+    super.ready();
+    afterNextRender(this, () => {
+      this.scrollLeft = this.offsetWidth;
+    });
   }
 
   _iconComputed(source) {
