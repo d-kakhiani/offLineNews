@@ -1,22 +1,17 @@
 import {CoreElement} from '../core/CoreElement';
 import {html} from '@polymer/polymer/polymer-element.js';
 import {config} from '../../config/config';
-import '@polymer/paper-ripple';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 
 class NewsItem extends CoreElement {
   static get template() {
     return html`<style>
     :host {
-        /*touch-action: pan-y !important;*/
-         scroll-snap-type: mandatory;
-        scroll-snap-points-y: repeat(100vw);
-        scroll-snap-type: x mandatory;
         display: flex;
-        overflow-x: scroll;
-        contain: paint;
+        overflow: hidden;
     }
-    :host > *{
+
+    .wrapper > * {
         scroll-snap-align: center;
     }
 
@@ -91,7 +86,8 @@ class NewsItem extends CoreElement {
         background-repeat: no-repeat;
         background-position: center;
     }
-    .container{
+
+    .container {
         display: inline-flex;
         flex-grow: 1;
         background: #dcd8d86e;
@@ -104,32 +100,45 @@ class NewsItem extends CoreElement {
         min-width: calc(100vw - 24px);
         max-width: calc(100vw - 24px);
         contain: paint;
-      }
-    
+    }
+
     .left, .right {
         min-width: 100vw;
         height: 120px;
     }
-    ::-webkit-scrollbar {
-    width: 0px;
-    background: transparent; /* make scrollbar transparent */
-}
-    
+
+    .wrapper {
+        height: 100%;
+        margin-bottom: -50px; /* maximum width of scrollbar */
+        padding-bottom: 50px; /* maximum width of scrollbar */
+        overflow-y: hidden;
+        overflow-x: scroll;
+        /*touch-action: pan-y !important;*/
+        scroll-snap-type: mandatory;
+        scroll-snap-points-y: repeat(100vw);
+        scroll-snap-type: x mandatory;
+        display: flex;
+        overflow-x: scroll;
+        contain: paint;
+    }
+
 </style>
-<div class="left"></div>
-<div class="container">
-  <div class="details-container">
-      <span class="title">[[title]]</span>
-      <div class="bottom">
-          <span class="icon" style="background-image: url('[[_icon]]')"></span>
-          <span class="time">[[_getFormatedDate(publish)]]</span>
-      </div>
-  </div>
-  <div class="img"
-       style="background-image: url([[img]])"></div>
-  <paper-ripple></paper-ripple>
+<div class="wrapper" id="wrapper">
+    <div class="left"></div>
+    <div class="container">
+        <div class="details-container">
+            <span class="title">[[title]]</span>
+            <div class="bottom">
+                <span class="icon" style="background-image: url('[[_icon]]')"></span>
+                <span class="time">[[_getFormatedDate(publish)]]</span>
+            </div>
+        </div>
+        <div class="img"
+             style="background-image: url([[img]])"></div>
+    </div>
+    <div class="right"></div>
 </div>
-<div class="right"></div>
+
     `;
   }
 
@@ -156,8 +165,20 @@ class NewsItem extends CoreElement {
   ready() {
     super.ready();
     afterNextRender(this, () => {
-      this.scrollLeft = this.offsetWidth;
+      this.$.wrapper.scrollLeft = this.offsetWidth;
+      this.deviceWidth = this.offsetWidth;
+      this.$.wrapper.addEventListener('scroll',
+          this.handleScroll.bind(this));
     });
+  }
+
+  handleScroll(event) {
+    if (event.currentTarget.scrollLeft === 0 ||
+        event.currentTarget.scrollLeft === 2 * this.deviceWidth) {
+      event.currentTarget.removeEventListener('scroll',
+          this.handleScroll.bind(this));
+      this.remove();
+    }
   }
 
   _iconComputed(source) {

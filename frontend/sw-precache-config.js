@@ -14,6 +14,7 @@ module.exports = {
     'config/*',
     'node_modules/**/*',
     'images/*',
+    'files/images/*',
     'manifest.json',
     'service-worker.js',
   ],
