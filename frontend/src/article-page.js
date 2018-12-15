@@ -17,7 +17,8 @@ class ArticlePage extends CoreElement {
        <app-route route="{{route}}" pattern="[[basePath]]:articleId" data="{{routeData}}" tail="{{subroute}}">
       </app-route>
       [[articleId]]
-      
+      <h4 class="title">[[title]]</h4>
+      <div id="fullText"></div>
     `;
   }
 
@@ -48,11 +49,19 @@ class ArticlePage extends CoreElement {
   }
 
   _articleIdChanged(articleId) {
-
+    if (!articleId) return;
+    let articleObj = localStorage.getItem(articleId);
+    if (articleObj) {
+      articleObj = JSON.parse(articleObj);
+      this.title = articleObj.title;
+      this.$.fullText.innerHTML = articleObj.fullText;
+      localStorage.removeItem(articleId);
+    }
   }
 
   ready() {
     super.ready();
+    return;
     this.dbPromise = idb.open('couches-n-things', 4, function(upgradeDb) {
       switch (upgradeDb.oldVersion) {
         case 0:

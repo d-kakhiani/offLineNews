@@ -31,6 +31,7 @@ class HomeView extends CoreElement {
         <news-item
                 item-id="[[item._id]]"
                 title="[[item.title]]"
+                on-click="_getFullText"
                 img="[[filesEndPoint]]/files/images/?url=[[item.thumb]]"
                 publish="[[item.publish_up]]"
                 source="[[item.source]]"
@@ -157,6 +158,11 @@ class HomeView extends CoreElement {
         this._newsList = items;
       }
     });
+  }
+
+  _getFullText(event) {
+    let item = event.model.item;
+    localStorage.setItem(item._id, JSON.stringify(item));
   }
 
   _observerHandler(entries, observer) {

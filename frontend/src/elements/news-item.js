@@ -38,12 +38,6 @@ class NewsItem extends CoreElement {
         line-height: 1;
     }
 
-    paper-ripple {
-        border-radius: 2px;
-        overflow: hidden;
-        color: white;
-    }
-
     .details-container {
         display: flex;
         flex-direction: column;
@@ -75,10 +69,6 @@ class NewsItem extends CoreElement {
         width: 100%;
     }
 
-    :host([grid-view]) paper-ripple {
-        background: #2e4e84a3;
-    }
-
     .icon {
         width: 70px;
         height: 20px;
@@ -100,6 +90,9 @@ class NewsItem extends CoreElement {
         min-width: calc(100vw - 24px);
         max-width: calc(100vw - 24px);
         contain: paint;
+        outline: none;
+        text-decoration: none;
+        color: #000;
     }
 
     .left, .right {
@@ -109,23 +102,20 @@ class NewsItem extends CoreElement {
 
     .wrapper {
         height: 100%;
-        margin-bottom: -50px; /* maximum width of scrollbar */
-        padding-bottom: 50px; /* maximum width of scrollbar */
+        margin-bottom: -50px;
+        padding-bottom: 50px;
         overflow-y: hidden;
         overflow-x: scroll;
-        /*touch-action: pan-y !important;*/
-        scroll-snap-type: mandatory;
         scroll-snap-points-y: repeat(100vw);
         scroll-snap-type: x mandatory;
         display: flex;
-        overflow-x: scroll;
         contain: paint;
     }
 
 </style>
 <div class="wrapper" id="wrapper">
     <div class="left"></div>
-    <div class="container">
+    <a class="container" href$="/articles/[[itemId]]">
         <div class="details-container">
             <span class="title">[[title]]</span>
             <div class="bottom">
@@ -135,7 +125,7 @@ class NewsItem extends CoreElement {
         </div>
         <div class="img"
              style="background-image: url([[img]])"></div>
-    </div>
+    </a>
     <div class="right"></div>
 </div>
 
