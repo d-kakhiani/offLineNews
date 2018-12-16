@@ -159,8 +159,8 @@ class NewsItem extends CoreElement {
     afterNextRender(this, () => {
       this.$.wrapper.scrollLeft = this.offsetWidth;
       this.deviceWidth = this.offsetWidth;
-      // this.$.wrapper.addEventListener('scroll',
-      //     this.handleScroll.bind(this));
+      this.$.wrapper.addEventListener('scroll',
+          this.handleScroll.bind(this));
     });
   }
 
