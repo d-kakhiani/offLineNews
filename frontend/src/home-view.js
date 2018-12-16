@@ -20,14 +20,14 @@ class HomeView extends CoreElement {
         overflow-x: hidden;
 
     }
-
-    :host([grid-view]) .container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
+    
+    /*:host([grid-view]) .container {*/
+        /*display: grid;*/
+        /*grid-template-columns: 1fr 1fr;*/
+    /*}*/
 </style>
 <div class="container">
-    <template is="dom-repeat" items="{{_newsList}}">
+    <template is="dom-repeat" items="[[_newsList]]" initial-count="5">
         <news-item
                 item-id="[[item._id]]"
                 title="[[item.title]]"
@@ -36,7 +36,7 @@ class HomeView extends CoreElement {
                 publish="[[item.publish_up]]"
                 source="[[item.source]]"
                 on-delete="_deleteThisItem"
-                grid-view$="[[gridView]]">
+                >
         </news-item>
     </template>
 </div>
@@ -53,7 +53,7 @@ class HomeView extends CoreElement {
       },
       take: {
         type: Number,
-        value: 10,
+        value: 20,
       },
       _newsList: {
         type: Array,

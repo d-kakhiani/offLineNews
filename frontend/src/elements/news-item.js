@@ -87,12 +87,12 @@ class NewsItem extends CoreElement {
         overflow: hidden;
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
         position: relative;
-        min-width: calc(100vw - 24px);
-        max-width: calc(100vw - 24px);
         contain: paint;
         outline: none;
         text-decoration: none;
         color: #000;
+        min-width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
     }
 
     .left, .right {
@@ -101,12 +101,10 @@ class NewsItem extends CoreElement {
     }
 
     .wrapper {
-        height: 100%;
         margin-bottom: -50px;
         padding-bottom: 50px;
         overflow-y: hidden;
         overflow-x: scroll;
-        scroll-snap-points-y: repeat(100vw);
         scroll-snap-type: x mandatory;
         display: flex;
         contain: paint;
@@ -157,8 +155,8 @@ class NewsItem extends CoreElement {
     afterNextRender(this, () => {
       this.$.wrapper.scrollLeft = this.offsetWidth;
       this.deviceWidth = this.offsetWidth;
-      this.$.wrapper.addEventListener('scroll',
-          this.handleScroll.bind(this));
+      // this.$.wrapper.addEventListener('scroll',
+      //     this.handleScroll.bind(this));
     });
   }
 
