@@ -94,6 +94,10 @@ class NewsItem extends CoreElement {
         min-width: calc(100vw - 24px);
         max-width: calc(100vw - 24px);
     }
+    .container:focus,.wrapper:focus,
+    .container:active,.wrapper:active{
+        outline: none;
+    }
 
     .left, .right {
         min-width: 100vw;
