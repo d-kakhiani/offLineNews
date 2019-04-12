@@ -8,9 +8,15 @@ const app = express();
 const prpl = require('prpl-server');
 const polymerJSON = require('./polymer.json');
 const compress = require('compression');
-
+const assets = require('./assetlinks.json');
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://dbuser:WeirdPlace1234.@ds129914.mlab.com:29914/newapp`, {useNewUrlParser: true});
+mongoose.connect(
+    `mongodb://dbuser:WeirdPlace1234.@ds129914.mlab.com:29914/newapp`,
+    {useNewUrlParser: true});
+app.all('/.well-known/*', (req, res, next) => {
+  res.json(assets);
+  res.end()
+});
 app.use(helmet());
 app.use(compress());
 app.use('/api', require('./routes/api'));
